@@ -1,0 +1,47 @@
+<html>
+<body>
+<div id="img-arena-event-centre" style="height:500px;width:100%;"></div>
+
+<script src="https://unpkg.com/@img-arena/front-row-seat@0.x/dist/index.umd.js"></script>
+<script>
+                const { MessageTopics } = frontRowSeat.eventCentreUtils;
+                const eventCentreInstance = frontRowSeat.eventCentre({
+                  operator: "bet365",
+                  sport: "golf",
+                  targetModule: "full",
+                  eventId: "365",
+                  version: "3.27.0",
+                  targetElementSelector: "#img-arena-event-centre",
+                  language: "en"
+                });
+                eventCentreInstance.on(MessageTopics.CONTEXT_UPDATE, function (msg) {
+                    consoleLog("CONTEXT_UPDATE", JSON.stringify(msg));
+                    Android.contextUpdate(JSON.stringify(msg));
+                });
+                eventCentreInstance.on(MessageTopics.SELECTION_UPDATE, function (msg) {
+                    consoleLog("SELECTION_UPDATE", JSON.stringify(msg));
+                    Android.selectionUpdate(JSON.stringify(msg));
+                });
+                eventCentreInstance.on(MessageTopics.VIDEO_PLAYBACK_AUTH_REQUEST, function (msg) {
+                    consoleLog("VIDEO_PLAYBACK_AUTH_REQUEST", msg);
+                    Android.videoPlaybackAuthRequest(JSON.stringify(msg));
+                });
+
+                eventCentreInstance.on(MessageTopics.VIDEO_PLAYBACK_AUTH_RESPONSE, function (msg) {
+                    consoleLog("VIDEO_PLAYBACK_AUTH_RESPONSE", msg);
+                    Android.videoPlaybackAuthResponse(JSON.stringify(msg));
+                });
+
+                function emit(topic, msg) {
+                    eventCentreInstance.emit(topic, msg);
+                    console.log("Android Called emit Method in console with topic: " + topic + " data: " + msg);
+                }
+
+                function consoleLog(topic, msg) {
+                    console.log(topic + JSON.stringify(msg))
+                }
+
+
+              </script>
+</body>
+</html>
